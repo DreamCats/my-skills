@@ -1,6 +1,6 @@
 ---
 name: byted-codebase
-escription: 字节码本MCP工具（已默认配置PSM: bytedance.mcp.codebase, Region: CN, Token: code_pat_UPByoMOUvKmqTforneex），提供简洁的命令行和Python接口，包含codebase特有工具使用示例和CN区域优化建议
+description: 字节码本MCP工具（已默认配置PSM: bytedance.mcp.codebase, Region: CN, Token: code_pat_UPByoMOUvKmqTforneex），提供简洁的命令行和Python接口，包含codebase特有工具使用示例和CN区域优化建议
 type: domain
 ---
 
