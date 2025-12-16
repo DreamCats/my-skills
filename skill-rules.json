@@ -1,0 +1,202 @@
+{
+  "version": "1.0",
+  "description": "Skill activation triggers for Claude Code. Controls when skills automatically suggest or block actions.",
+  "skills": {
+    "skill-developer": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "Meta-skill for creating and managing Claude Code skills",
+      "promptTriggers": {
+        "keywords": [
+          "skill system",
+          "create skill",
+          "add skill",
+          "skill triggers",
+          "skill rules",
+          "hook system",
+          "skill development",
+          "skill-rules.json",
+          "generate skill",
+          "技能",
+          "创建技能"
+        ],
+        "intentPatterns": [
+          "(how do|how does|explain).*?skill",
+          "(create|add|modify|build).*?skill",
+          "skill.*?(work|trigger|activate|system)"
+        ]
+      }
+    },
+    "mcp-builder": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "Guide for creating high-quality MCP (Model Context Protocol) servers",
+      "promptTriggers": {
+        "keywords": [
+          "mcp server",
+          "model context protocol",
+          "mcp builder",
+          "create mcp",
+          "build mcp",
+          "mcp integration",
+          "mcp tools",
+          "mcp api",
+          "fastmcp",
+          "mcp sdk"
+        ],
+        "intentPatterns": [
+          "(create|build|make).*?mcp.*?server",
+          "(how to|guide).*?mcp.*?server",
+          "mcp.*?(integration|api|tools)",
+          "(external|third party).*?mcp"
+        ]
+      }
+    },
+    "utools": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "uTools is a cross-platform toolbox with plugins for daily tasks",
+      "promptTriggers": {
+        "keywords": [
+          "utools",
+          "utools plugin",
+          "utools integration",
+          "cross-platform toolbox",
+          "productivity tools",
+          "workflow automation",
+          "desktop utilities"
+        ],
+        "intentPatterns": [
+          "(install|use|setup).*?utools",
+          "utools.*?(plugin|extension)",
+          "(productivity|workflow).*?tool"
+        ]
+      }
+    },
+    "byted-logid": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "字节日志ID工具集 - 提供生成字节日志ID的功能",
+      "promptTriggers": {
+        "keywords": [
+         "logid",
+         "日志查询",
+         "字日志ID"
+        ],
+        "intentPatterns": [
+          "(获取|查询|生成).*?(字节日志ID)",
+          "(how to|get|generate).*?(logid)"
+        ]
+      }
+    },
+    "byted-lark-cli": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "Lark CLI工具集 - 提供查询飞书文档、知识空间管理、消息发送、文件操作等功能",
+      "promptTriggers": {
+        "keywords": [
+          "lark-cli",
+          "文档查询",
+          "飞书文档",
+          "查询飞书文档内容",
+          "飞书文档内容",
+          "查询飞书文档",
+          "bytedance.larkoffice.com/wiki",
+          "bytedance.larkoffice.com/docx",
+          "知识空间",
+          "文档块操作",
+          "飞书API",
+          "lark api",
+          "lark-cli命令",
+          "飞书CLI工具"
+        ],
+        "intentPatterns": [
+          "(获取|查询|读取).*?(飞书|lark).*?文档",
+          "(获取|查询|读取).*?文档.*?内容",
+          "(发送|推送).*?(飞书|lark).*?消息",
+          "上传.*?(到|至).*?(飞书|lark).*?文档",
+          "(创建|新建).*?(飞书|lark).*?文档",
+          "(批量|批量操作).*?(文档|消息)",
+          "bytedance.larkoffice.com/(wiki|docx)",
+          "lark-cli.*?(命令|使用|帮助)"
+        ]
+      },
+      "fileTriggers": {
+        "pathPatterns": [
+          "**/lark-cli*",
+          "**/*lark*",
+          "**/.env*",
+          "**/byted-lark-cli/**"
+        ],
+        "contentPatterns": [
+          "APP_ID.*=",
+          "APP_SECRET.*=",
+          "lark-cli",
+          "飞书文档",
+          "bytedance\\.larkoffice\\.com"
+        ]
+      }
+    },
+    "byted-codebase": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "字节码本MCP工具（已默认配置PSM: bytedance.mcp.codebase, Region: CN, Token: code_pat_UPByoMOUvKmqTforneex），提供简洁的命令行和Python接口",
+      "promptTriggers": {
+        "keywords": [
+          "byted-codebase",
+          "仓库",
+          "cr",
+          "mr",
+          "review",
+          "merge request",
+          "merge_requests"
+        ],
+        "intentPatterns": [
+          "(使用|调用|运行).*?(bytedance_mcp.py|codebase)",
+          "(搜索|查询).*?(代码|code).*?(bytedance_mcp|mr)",
+          "bytedance_mcp.py.*?(list-tools|call|code_search)"
+        ]
+      },
+      "fileTriggers": {
+        "pathPatterns": [
+          "**/bytedance_mcp.py",
+          "**/byted-codebase*/**",
+          "**/*codebase*",
+          "**/.claude/skills/byted-codebase*/**"
+        ],
+        "contentPatterns": [
+          "bytedance_mcp",
+          "ByteDanceMCP",
+          "bytedance_mcp.py",
+          "list-tools",
+          "code_search",
+          "mcp-proxy"
+        ]
+      }
+    }
+  },
+  "notes": {
+    "enforcement_types": {
+      "suggest": "Skill suggestion appears but doesn't block execution",
+      "block": "Requires skill to be used before proceeding (guardrail)",
+      "warn": "Shows warning but allows proceeding"
+    },
+    "priority_levels": {
+      "critical": "Highest - Always trigger when matched",
+      "high": "Important - Trigger for most matches",
+      "medium": "Moderate - Trigger for clear matches",
+      "low": "Optional - Trigger only for explicit matches"
+    },
+    "customization": {
+      "pathPatterns": "Adjust to match your project structure (blog-api, auth-service, etc.)",
+      "keywords": "Add domain-specific terms relevant to your project",
+      "intentPatterns": "Use regex for flexible user intent matching"
+    }
+  }
+}
