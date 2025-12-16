@@ -1,7 +1,9 @@
 ---
-title: gcmsg
-description: 按照一定规则生成，生成 git commit message， 缩写命令：gcmsg
+title: gcmsge
+description: 按照一定规则生成，生成 git commit message and emoji， 缩写命令：gcmsge
 ---
+
+This skill helps you create well-formatted commits with conventional commit messages and emoji.
 
 ## What This Command Does
 
