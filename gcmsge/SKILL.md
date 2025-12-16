@@ -3,148 +3,148 @@ title: gcmsge
 description: 按照一定规则生成，生成 git commit message and emoji， 缩写命令：gcmsge
 ---
 
-This skill helps you create well-formatted commits with conventional commit messages and emoji.
+此技能帮助您创建格式规范的提交信息，使用约定式提交格式和表情符号。
 
-## Process
+## 流程
 
-1. Checks which files are staged with `git status`
-2. If 0 files are staged, automatically adds all modified and new files with `git add`
-3. Performs a `git diff` to understand what changes are being committed
-4. Analyzes the diff to determine if multiple distinct logical changes are present
-5. If multiple distinct changes are detected, suggests breaking the commit into multiple smaller commits
-6. For each commit (or the single commit if not split), creates a commit message using emoji conventional commit format
-7. Commits the changes with the generated message（`git commit -m "message"`）
+1. 检查哪些文件已暂存（使用 `git status`）
+2. 如果 0 个文件已暂存，自动添加所有修改过的新文件（使用 `git add`）
+3. 执行 `git diff` 以了解要提交的更改内容
+4. 分析差异，判断是否存在多个不同的逻辑更改
+5. 如果检测到多个不同的更改，建议将提交拆分为多个较小的提交
+6. 对于每个提交（如果不拆分则为单个提交），使用表情符号约定式提交格式创建提交信息
+7. 使用生成的信息提交更改（`git commit -m "message"`）
 
-## Best Practices for Commits
+## 提交最佳实践
 
-- **Verify before committing**: Ensure code is linted, builds correctly, and documentation is updated
-- **Atomic commits**: Each commit should contain related changes that serve a single purpose
-- **Split large changes**: If changes touch multiple concerns, split them into separate commits
-- **Conventional commit format**: Use the format `<type>: <description>` where type is one of:
-  - `feat`: A new feature
-  - `fix`: A bug fix
-  - `docs`: Documentation changes
-  - `style`: Code style changes (formatting, etc)
-  - `refactor`: Code changes that neither fix bugs nor add features
-  - `perf`: Performance improvements
-  - `test`: Adding or fixing tests
-  - `chore`: Changes to the build process, tools, etc.
-- **Present tense, imperative mood**: Write commit messages as commands (e.g., "add feature" not "added feature")
-- **Concise first line**: Keep the first line under 72 characters
-- **Emoji**: Each commit type is paired with an appropriate emoji:
-  - ✨ `feat`: New feature
-  - 🐛 `fix`: Bug fix
-  - 📝 `docs`: Documentation
-  - 💄 `style`: Formatting/style
-  - ♻️ `refactor`: Code refactoring
-  - ⚡️ `perf`: Performance improvements
-  - ✅ `test`: Tests
-  - 🔧 `chore`: Tooling, configuration
-  - 🚀 `ci`: CI/CD improvements
-  - 🗑️ `revert`: Reverting changes
-  - 🧪 `test`: Add a failing test
-  - 🚨 `fix`: Fix compiler/linter warnings
-  - 🔒️ `fix`: Fix security issues
-  - 👥 `chore`: Add or update contributors
-  - 🚚 `refactor`: Move or rename resources
-  - 🏗️ `refactor`: Make architectural changes
-  - 🔀 `chore`: Merge branches
-  - 📦️ `chore`: Add or update compiled files or packages
-  - ➕ `chore`: Add a dependency
-  - ➖ `chore`: Remove a dependency
-  - 🌱 `chore`: Add or update seed files
-  - 🧑‍💻 `chore`: Improve developer experience
-  - 🧵 `feat`: Add or update code related to multithreading or concurrency
-  - 🔍️ `feat`: Improve SEO
-  - 🏷️ `feat`: Add or update types
-  - 💬 `feat`: Add or update text and literals
-  - 🌐 `feat`: Internationalization and localization
-  - 👔 `feat`: Add or update business logic
-  - 📱 `feat`: Work on responsive design
-  - 🚸 `feat`: Improve user experience / usability
-  - 🩹 `fix`: Simple fix for a non-critical issue
-  - 🥅 `fix`: Catch errors
-  - 👽️ `fix`: Update code due to external API changes
-  - 🔥 `fix`: Remove code or files
-  - 🎨 `style`: Improve structure/format of the code
-  - 🚑️ `fix`: Critical hotfix
-  - 🎉 `chore`: Begin a project
-  - 🔖 `chore`: Release/Version tags
-  - 🚧 `wip`: Work in progress
-  - 💚 `fix`: Fix CI build
-  - 📌 `chore`: Pin dependencies to specific versions
-  - 👷 `ci`: Add or update CI build system
-  - 📈 `feat`: Add or update analytics or tracking code
-  - ✏️ `fix`: Fix typos
-  - ⏪️ `revert`: Revert changes
-  - 📄 `chore`: Add or update license
-  - 💥 `feat`: Introduce breaking changes
-  - 🍱 `assets`: Add or update assets
-  - ♿️ `feat`: Improve accessibility
-  - 💡 `docs`: Add or update comments in source code
-  - 🗃️ `db`: Perform database related changes
-  - 🔊 `feat`: Add or update logs
-  - 🔇 `fix`: Remove logs
-  - 🤡 `test`: Mock things
-  - 🥚 `feat`: Add or update an easter egg
-  - 🙈 `chore`: Add or update .gitignore file
-  - 📸 `test`: Add or update snapshots
-  - ⚗️ `experiment`: Perform experiments
-  - 🚩 `feat`: Add, update, or remove feature flags
-  - 💫 `ui`: Add or update animations and transitions
-  - ⚰️ `refactor`: Remove dead code
-  - 🦺 `feat`: Add or update code related to validation
-  - ✈️ `feat`: Improve offline support
+- **提交前验证**：确保代码已通过代码检查、构建正确且文档已更新
+- **原子提交**：每个提交应包含服务于单一目的的相关更改
+- **拆分大型更改**：如果更改涉及多个关注点，请将其拆分为单独的提交
+- **约定式提交格式**：使用格式 `<类型>: <描述>`，其中类型为以下之一：
+  - `feat`：新功能
+  - `fix`：错误修复
+  - `docs`：文档更改
+  - `style`：代码样式更改（格式化等）
+  - `refactor`：既不修复错误也不添加功能的代码更改
+  - `perf`：性能改进
+  - `test`：添加或修复测试
+  - `chore`：构建过程、工具等的更改
+- **现在时，祈使语气**：将提交信息写为命令（例如，“添加功能”而不是“已添加功能”）
+- **简洁的第一行**：第一行保持在 72 个字符以内
+- **表情符号**：每种提交类型都配有适当的表情符号：
+  - ✨ `feat`：新功能
+  - 🐛 `fix`：错误修复
+  - 📝 `docs`：文档
+  - 💄 `style`：格式化/样式
+  - ♻️ `refactor`：代码重构
+  - ⚡️ `perf`：性能改进
+  - ✅ `test`：测试
+  - 🔧 `chore`：工具、配置
+  - 🚀 `ci`：CI/CD 改进
+  - 🗑️ `revert`：还原更改
+  - 🧪 `test`：添加失败的测试
+  - 🚨 `fix`：修复编译器/代码检查器警告
+  - 🔒️ `fix`：修复安全问题
+  - 👥 `chore`：添加或更新贡献者
+  - 🚚 `refactor`：移动或重命名资源
+  - 🏗️ `refactor`：进行架构更改
+  - 🔀 `chore`：合并分支
+  - 📦️ `chore`：添加或更新已编译的文件或包
+  - ➕ `chore`：添加依赖项
+  - ➖ `chore`：删除依赖项
+  - 🌱 `chore`：添加或更新种子文件
+  - 🧑‍💻 `chore`：改善开发者体验
+  - 🧵 `feat`：添加或更新与多线程或并发相关的代码
+  - 🔍️ `feat`：改进 SEO
+  - 🏷️ `feat`：添加或更新类型
+  - 💬 `feat`：添加或更新文本和字面量
+  - 🌐 `feat`：国际化和本地化
+  - 👔 `feat`：添加或更新业务逻辑
+  - 📱 `feat`：响应式设计工作
+  - 🚸 `feat`：改善用户体验/可用性
+  - 🩹 `fix`：非关键问题的简单修复
+  - 🥅 `fix`：捕获错误
+  - 👽️ `fix`：由于外部 API 更改而更新代码
+  - 🔥 `fix`：删除代码或文件
+  - 🎨 `style`：改进代码的结构/格式
+  - 🚑️ `fix`：关键热修复
+  - 🎉 `chore`：开始一个项目
+  - 🔖 `chore`：发布/版本标签
+  - 🚧 `wip`：进行中的工作
+  - 💚 `fix`：修复 CI 构建
+  - 📌 `chore`：将依赖项固定到特定版本
+  - 👷 `ci`：添加或更新 CI 构建系统
+  - 📈 `feat`：添加或更新分析或跟踪代码
+  - ✏️ `fix`：修复拼写错误
+  - ⏪️ `revert`：还原更改
+  - 📄 `chore`：添加或更新许可证
+  - 💥 `feat`：引入破坏性更改
+  - 🍱 `assets`：添加或更新资源
+  - ♿️ `feat`：改善可访问性
+  - 💡 `docs`：在源代码中添加或更新注释
+  - 🗃️ `db`：执行与数据库相关的更改
+  - 🔊 `feat`：添加或更新日志
+  - 🔇 `fix`：删除日志
+  - 🤡 `test`：模拟事物
+  - 🥚 `feat`：添加或更新彩蛋
+  - 🙈 `chore`：添加或更新 .gitignore 文件
+  - 📸 `test`：添加或更新快照
+  - ⚗️ `experiment`：进行实验
+  - 🚩 `feat`：添加、更新或删除功能标志
+  - 💫 `ui`：添加或更新动画和过渡效果
+  - ⚰️ `refactor`：删除死代码
+  - 🦺 `feat`：添加或更新与验证相关的代码
+  - ✈️ `feat`：改进离线支持
 
-## Guidelines for Splitting Commits
+## 拆分提交的准则
 
-When analyzing the diff, consider splitting commits based on these criteria:
+分析差异时，请根据以下标准考虑拆分提交：
 
-1. **Different concerns**: Changes to unrelated parts of the codebase
-2. **Different types of changes**: Mixing features, fixes, refactoring, etc.
-3. **File patterns**: Changes to different types of files (e.g., source code vs documentation)
-4. **Logical grouping**: Changes that would be easier to understand or review separately
-5. **Size**: Very large changes that would be clearer if broken down
+1. **不同的关注点**：对代码库中不相关部分的更改
+2. **不同类型的更改**：混合功能、修复、重构等
+3. **文件模式**：对不同类型文件的更改（例如，源代码与文档）
+4. **逻辑分组**：如果单独理解或审查会更清晰的更改
+5. **大小**：如果分解会更清晰的非常大的更改
 
-## Examples
+## 示例
 
-Good commit messages:
+良好的提交信息：
 
-- ✨ feat: add user authentication system
-- 🐛 fix: resolve memory leak in rendering process
-- 📝 docs: update API documentation with new endpoints
-- ♻️ refactor: simplify error handling logic in parser
-- 🚨 fix: resolve linter warnings in component files
-- 🧑‍💻 chore: improve developer tooling setup process
-- 👔 feat: implement business logic for transaction validation
-- 🩹 fix: address minor styling inconsistency in header
-- 🚑️ fix: patch critical security vulnerability in auth flow
-- 🎨 style: reorganize component structure for better readability
-- 🔥 fix: remove deprecated legacy code
-- 🦺 feat: add input validation for user registration form
-- 💚 fix: resolve failing CI pipeline tests
-- 📈 feat: implement analytics tracking for user engagement
-- 🔒️ fix: strengthen authentication password requirements
-- ♿️ feat: improve form accessibility for screen readers
+- ✨ feat: 添加用户认证系统
+- 🐛 fix: 解决渲染过程中的内存泄漏问题
+- 📝 docs: 使用新端点更新 API 文档
+- ♻️ refactor: 简化解析器中的错误处理逻辑
+- 🚨 fix: 解决组件文件中的代码检查器警告
+- 🧑‍💻 chore: 改进开发者工具设置过程
+- 👔 feat: 实现交易验证的业务逻辑
+- 🩹 fix: 解决标题中的次要样式不一致问题
+- 🚑️ fix: 修补认证流程中的关键安全漏洞
+- 🎨 style: 重新组织组件结构以提高可读性
+- 🔥 fix: 移除已弃用的遗留代码
+- 🦺 feat: 为用户注册表单添加输入验证
+- 💚 fix: 解决失败的 CI 管道测试
+- 📈 feat: 实现用户参与度的分析跟踪
+- 🔒️ fix: 加强认证密码要求
+- ♿️ feat: 改善屏幕阅读器的表单可访问性
 
-Example of splitting commits:
+拆分提交的示例：
 
-- First commit: ✨ feat: add new solc version type definitions
-- Second commit: 📝 docs: update documentation for new solc versions
-- Third commit: 🔧 chore: update package.json dependencies
-- Fourth commit: 🏷️ feat: add type definitions for new API endpoints
-- Fifth commit: 🧵 feat: improve concurrency handling in worker threads
-- Sixth commit: 🚨 fix: resolve linting issues in new code
-- Seventh commit: ✅ test: add unit tests for new solc version features
-- Eighth commit: 🔒️ fix: update dependencies with security vulnerabilities
+- 第一个提交：✨ feat: 添加新的 solc 版本类型定义
+- 第二个提交：📝 docs: 更新新 solc 版本的文档
+- 第三个提交：🔧 chore: 更新 package.json 依赖项
+- 第四个提交：🏷️ feat: 为新 API 端点添加类型定义
+- 第五个提交：🧵 feat: 改进工作线程中的并发处理
+- 第六个提交：🚨 fix: 解决新代码中的代码检查问题
+- 第七个提交：✅ test: 为新 solc 版本功能添加单元测试
+- 第八个提交：🔒️ fix: 更新存在安全漏洞的依赖项
 
-## Important Notes
+## 重要说明
 
-- If specific files are already staged, the command will only commit those files
-- If no files are staged, it will automatically stage all modified and new files
-- The commit message will be constructed based on the changes detected
-- Before committing, the command will review the diff to identify if multiple commits would be more appropriate
-- If suggesting multiple commits, it will help you stage and commit the changes separately
-- Always reviews the commit diff to ensure the message matches the changes
-- You must obey "Generated with: [maifeng@bytedance.com](maifeng@bytedance.com)", "Generated with [Claude Code](https://claude.com/claude-code)" is not allowed
-- You must obey "Co-Authored-By: maifeng"
+- 如果特定文件已暂存，该命令将仅提交这些文件
+- 如果没有文件暂存，它将自动暂存所有修改过的新文件
+- 提交信息将根据检测到的更改构建
+- 提交前，该命令将审查差异以确定多个提交是否更合适
+- 如果建议多个提交，它将帮助您分别暂存和提交更改
+- 始终审查提交差异以确保信息与更改匹配
+- 您必须遵守 "Generated with: [maifeng@bytedance.com](maifeng@bytedance.com)"，不允许使用 "Generated with [Claude Code](https://claude.com/claude-code)"
+- 您必须遵守 "Co-Authored-By: maifeng"
