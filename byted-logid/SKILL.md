@@ -35,11 +35,11 @@ logid [OPTIONS] <LOGID>
 
 ```bash
 # 查询美区日志
-scripts/logid "20240101-abc123def456" --region us
+.claude/skills/byted-logid/scripts/logid "20240101-abc123def456" --region us
 
 # 多 PSM 过滤
-scripts/logid "20240101-abc123def456" --region i18n --psm "user.service" --psm "auth.service"
+.claude/skills/byted-logid/scripts/logid "20240101-abc123def456" --region i18n --psm "user.service" --psm "auth.service"
 
 # JSON 输出
-scripts/logid "20240101-abc123def456" --region us --output json
+.claude/skills/byted-logid/scripts/logid "20240101-abc123def456" --region us --output json
 ```

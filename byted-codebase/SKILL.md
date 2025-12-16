@@ -20,16 +20,16 @@ type: domain
 
 ```bash
 # 列出所有可用工具（无需参数）
-./bytedance_mcp.py list-tools
+.claude/skills/byted-logid/scripts/bytedance_mcp.py list-tools
 
 # 调用码本搜索工具（简洁版）
-./bytedance_mcp.py call --tool code_search --params '{
+.claude/skills/byted-logid/scripts/bytedance_mcp.py call --tool code_search --params '{
   "query": "useEffect hook",
   "limit": 10
 }'
 
 # 获取仓库信息
-./bytedance_mcp.py call --tool repo_info --params '{
+.claude/skills/byted-logid/scripts/bytedance_mcp.py call --tool repo_info --params '{
   "repo_name": "tiktok-backend"
 }'
 ```
