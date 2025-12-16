@@ -5,7 +5,7 @@ description: 按照一定规则生成，生成 git commit message and emoji， �
 
 This skill helps you create well-formatted commits with conventional commit messages and emoji.
 
-## What This Command Does
+## Process
 
 1. Checks which files are staged with `git status`
 2. If 0 files are staged, automatically adds all modified and new files with `git add`
@@ -13,6 +13,7 @@ This skill helps you create well-formatted commits with conventional commit mess
 4. Analyzes the diff to determine if multiple distinct logical changes are present
 5. If multiple distinct changes are detected, suggests breaking the commit into multiple smaller commits
 6. For each commit (or the single commit if not split), creates a commit message using emoji conventional commit format
+7. Commits the changes with the generated message（`git commit -m "message"`）
 
 ## Best Practices for Commits
 
