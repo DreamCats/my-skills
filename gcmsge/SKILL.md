@@ -1,6 +1,6 @@
 ---
 title: gcmsge
-description: 按照一定规则生成，生成 git commit message and emoji，并提交消息， 缩写命令：gcmsge
+description: 在 Git 仓库中一键完成提交：自动暂存、分析变更、生成符合 Conventional Commits 规范的提交信息，并直接完成提交。适合希望快速、规范地记录代码历史的场景。 缩写命令：gcmsge
 ---
 
 此技能帮助您创建格式规范的提交信息，使用约定式提交格式和表情符号。
