@@ -225,15 +225,6 @@ lark-cli add-permission sheet_token \
   --perm view
 ```
 
-## Scripts 目录
-
-`scripts/` 目录仅包含以下两个文件：
-
-- `lark-cli` - Lark CLI 可执行文件
-- `.env` - 环境配置文件（包含 APP_ID 和 APP_SECRET）
-
-配置好环境后，可以直接使用 `lark-cli` 命令。
-
 ## Output Formats
 
 Control output format for different use cases:
