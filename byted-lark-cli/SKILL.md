@@ -23,45 +23,12 @@ description: Lark CLI工具集 - 提供查询飞书文档、知识空间管理�
 
 ## Quick Start
 
-### 环境配置
-
-1. **获取工具**
-
-```bash
-git clone <repository-url>
-cd lark-cli
-cargo build --release
-# 复制到技能的 scripts 目录
-cp target/release/lark-cli .claude/skills/byted-lark-cli/scripts/
-```
-
-2. **配置认证**
-
-```bash
-# 复制配置模板到 scripts 目录
-cp .claude/skills/byted-lark-cli/assets/config_template/.env.template \
-   .claude/skills/byted-lark-cli/scripts/.env
-
-# 编辑 .env 填入应用信息
-nano .claude/skills/byted-lark-cli/scripts/.env
-```
-
-3. **设置 PATH（推荐）**
-
-```bash
-# 或临时使用
-export PATH="$(pwd)/.claude/skills/byted-lark-cli/scripts:$PATH"
-```
-
-4. **验证安装**
+**验证安装**
 
 ```bash
 # 检查 lark-cli 是否可用
 which lark-cli
 lark-cli --help
-
-# 或直接使用相对路径
-./.claude/skills/byted-lark-cli/scripts/lark-cli --help
 ```
 
 ### 核心命令速查

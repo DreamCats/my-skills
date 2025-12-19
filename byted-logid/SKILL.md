@@ -7,17 +7,13 @@ description: 字节日志 ID 工具 Skill，用于通过现有 logid CLI 脚本�
 
 ## 概述
 
-该 Skill 是一个 **调度与索引层（Orchestration Layer）**，  
-用于引导 Claude 正确使用 `scripts/` 目录下提供的 `logid` 命令行工具，
-以查询、解析和分析字节日志 ID（logid）。
-
-该 Skill 本身 **不实现日志解析逻辑**，  
-而是负责：
-
-- 判断用户意图
-- 组织命令参数
-- 调用脚本
-- 解释执行结果
+- 该 Skill 是一个 **调度与索引层（Orchestration Layer）**
+- 该 Skill 本身 **不实现日志解析逻辑**，  
+  而是负责：
+  - 判断用户意图
+  - 组织命令参数
+  - 调用脚本
+  - 解释执行结果
 
 ## 什么时候使用这个 Skill
 
@@ -103,7 +99,7 @@ Claude（使用该 Skill）：
 • 构造带 --region us 的命令
 • 执行脚本并返回解析结果
 
-scripts/logid "20240101-abc123def456" --region us
+logid "20240101-abc123def456" --region us
 
 示例 2：按多个 PSM 过滤
 
@@ -114,7 +110,7 @@ Claude（使用该 Skill）：
 • 添加多个 --psm 参数
 • 执行脚本并解释过滤后的结果
 
-scripts/logid "20240101-abc123def456" --region i18n \
+logid "20240101-abc123def456" --region i18n \
  --psm "user.service" \
  --psm "auth.service"
 
@@ -127,7 +123,7 @@ Claude（使用该 Skill）：
 • 添加 --output json
 • 使用结构化结果便于后续分析
 
-scripts/logid "20240101-abc123def456" --region us --output json
+logid "20240101-abc123def456" --region us --output json
 
 说明
 • 该 Skill 以 logid 脚本作为唯一事实来源
