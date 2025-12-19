@@ -110,6 +110,8 @@ lark-cli get-blocks doc_id --all
 
 ### 发送消息
 
+发消息前，如果是复杂消息，切记参考，[消息格式](reference/message.md)
+
 **文本消息：**
 
 ```bash
