@@ -51,6 +51,15 @@ lark-cli upload-media <file_path> <parent_type> <parent_node>
 
 # 添加内容到文档（支持从文件、目录或直接内容添加）
 lark-cli add-content <DOCUMENT_ID> <SOURCE> [选项]
+
+# 添加高亮块到文档
+lark-cli add-callout <DOCUMENT_ID> <CONTENT> [选项]
+
+# 添加画板到文档
+lark-cli add-board <DOCUMENT_ID> [选项]
+
+# 导入图表到画板（支持 PlantUML / Mermaid）
+lark-cli import-diagram <WHITEBOARD_ID> <SOURCE> [选项]
 ```
 
 ## Document Operations
@@ -104,6 +113,24 @@ lark-cli add-content doc_id ./docs --source-type dir --pattern "*.md"
 # 获取所有块
 lark-cli get-blocks doc_id --all
 
+```
+
+**高亮块与画板：**
+
+```bash
+# 添加高亮块（可选类型：info、warning、error、success）
+lark-cli add-callout doc_id "注意：这里是高亮块内容" --callout-type warning --icon "🔥"
+
+# 添加画板
+lark-cli add-board doc_id
+
+# 向画板导入 PlantUML（直接内容）
+lark-cli import-diagram whiteboard_id "@startuml\nAlice -> Bob: Hello\n@enduml" \
+  --source-type content \
+  --syntax plantuml
+
+# 向画板导入 Mermaid（文件）
+lark-cli import-diagram whiteboard_id ./diagram.mmd --source-type file --syntax mermaid
 ```
 
 ## Message Operations
