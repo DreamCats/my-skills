@@ -26,7 +26,8 @@ def run_lark_cli(args, want_json=False, verbose=False):
     - 失败时直接退出并输出错误信息
     """
     cmd = ["lark-cli"]
-    if verbose:
+    # JSON 输出需要保持纯净，避免 -v 混入日志导致解析失败
+    if verbose and not want_json:
         cmd.append("-v")
     if want_json:
         cmd += ["--format", "json"]
@@ -70,19 +71,23 @@ def extract_id(data, keys, value_predicate=None):
 
 
 def is_doc_id(value):
-    """启发式判断 doc id。"""
+    """启发式判断 doc id。
+
+    飞书文档 token 不一定以 docx 开头，这里放宽判断：
+    - 非空字符串且长度看起来合理
+    """
     if not isinstance(value, str):
         return False
-    v = value.lower()
-    return v.startswith("docx") or v.startswith("doc_") or v.startswith("doc")
+    v = value.strip()
+    return len(v) >= 8
 
 
 def is_board_id(value):
     """启发式判断 whiteboard/board id。"""
     if not isinstance(value, str):
         return False
-    v = value.lower()
-    return "whiteboard" in v or v.startswith("wb") or "board" in v
+    v = value.strip()
+    return len(v) >= 8
 
 
 def create_document(title, folder_token, verbose=False):
@@ -91,6 +96,7 @@ def create_document(title, folder_token, verbose=False):
     if folder_token:
         args += ["--folder-token", folder_token]
     data = run_lark_cli(args, want_json=True, verbose=verbose)
+    # 优先从明确字段读取，避免被其他 token 干扰
     doc_id = extract_id(
         data,
         [
@@ -100,15 +106,25 @@ def create_document(title, folder_token, verbose=False):
             "docxToken",
             "documentId",
             "docId",
-            "token",
-            "id",
         ],
-        value_predicate=is_doc_id,
     )
+    # 兼容结构不一致的情况，再尝试宽松匹配
+    if not doc_id:
+        doc_id = extract_id(
+            data,
+            ["token", "id"],
+            value_predicate=is_doc_id,
+        )
     if not doc_id:
         sys.stderr.write("Failed to parse document id from create-document output.\n")
         raise SystemExit(3)
-    return doc_id
+    # 尝试直接取 url（如存在）
+    doc_url = None
+    if isinstance(data, dict):
+        url = data.get("url")
+        if isinstance(url, str) and url.strip():
+            doc_url = url.strip()
+    return doc_id, doc_url
 
 
 def add_markdown(doc_id, text, verbose=False):
@@ -138,11 +154,25 @@ def add_callout(doc_id, text, callout_type=None, verbose=False):
 def add_board(doc_id, verbose=False):
     """创建画板并返回 whiteboard_id。"""
     data = run_lark_cli(["add-board", doc_id], want_json=True, verbose=verbose)
-    board_id = extract_id(
-        data,
-        ["whiteboard_id", "whiteboardId", "board_id", "boardId", "id", "token"],
-        value_predicate=is_board_id,
-    )
+    # 先从标准结构里取 board.token
+    board_id = None
+    if isinstance(data, dict):
+        children = data.get("children")
+        if isinstance(children, list):
+            for child in children:
+                if isinstance(child, dict):
+                    board = child.get("board")
+                    if isinstance(board, dict):
+                        token = board.get("token")
+                        if isinstance(token, str) and token.strip():
+                            board_id = token.strip()
+                            break
+    if not board_id:
+        board_id = extract_id(
+            data,
+            ["whiteboard_id", "whiteboardId", "board_id", "boardId", "token", "id"],
+            value_predicate=is_board_id,
+        )
     if not board_id:
         sys.stderr.write("Failed to parse whiteboard id from add-board output.\n")
         raise SystemExit(4)
@@ -273,12 +303,17 @@ def main():
 
     # 创建或复用文档
     doc_id = args.doc_id
+    doc_url = None
     if not doc_id:
         if args.dry_run:
             # dry-run 不调用 lark-cli，用占位符代替
             doc_id = "DOC_ID"
         else:
-            doc_id = create_document(args.title, args.folder_token, verbose=args.verbose)
+            doc_id, doc_url = create_document(args.title, args.folder_token, verbose=args.verbose)
+            # 默认输出 doc_id 与 url，方便用户回收链接
+            print(f"doc_id: {doc_id}")
+            if doc_url:
+                print(f"url: {doc_url}")
 
     # 解析 Markdown 为可执行片段
     segments = parse_segments(markdown_text)
