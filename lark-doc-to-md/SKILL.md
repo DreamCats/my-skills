@@ -43,13 +43,14 @@ python3 scripts/lark_doc_to_md.py --doc-id <DOC_ID> --out ./output.md --language
 
 - **文档标题**：page 块的 title 会输出为首行一级标题（如首个子块已是同名标题则不重复）。
 - **标题/正文/列表/引用/代码**：按块类型转换为标准 Markdown。
-- **@用户**：解析为 `![name](avatar_72) name`；如失败则回退为 `@user_id`。
+- **@用户**：解析为 `@名字`；如失败则回退为 `@user_id`。
 - **Callout**：转为 Markdown 引用块，首行带 `**提示**`。
 - **图片**：`download-media` 下载到 `assets/`，文件名使用 token，Markdown 引用相对路径。
 - **画板/流程图/图表**：`get-board-image` 下载缩略图到 `assets/`，Markdown 引用相对路径。
 - **表格**：
   - 简单表格 → Markdown 表格
   - 复杂表格（`row_span/col_span > 1`）→ HTML table
+  - 表格内图片使用 `<img>`，默认 `max-width:160px` 等比例缩放
 
 ## 参考文档
 

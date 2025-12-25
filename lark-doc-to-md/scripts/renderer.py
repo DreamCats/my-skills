@@ -1,10 +1,11 @@
 import json
 import os
 from html import escape as html_escape
-from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 from lark_cli import get_user_info, run_cmd
 from md_utils import detect_image_ext, escape_md_table_cell, text_from_elements, IMAGE_EXTS
+
+TABLE_IMAGE_MAX_WIDTH = 160
 
 
 class LarkDocRenderer:
@@ -17,6 +18,7 @@ class LarkDocRenderer:
         self.download_assets = download_assets
         self.index = {it["block_id"]: it for it in items}
         self.user_cache = {}
+        self.user_info_cache = {}
 
     def find_root(self):
         for it in self.items:
@@ -58,6 +60,26 @@ class LarkDocRenderer:
     def resolve_mention_user(self, user_id):
         if user_id in self.user_cache:
             return self.user_cache[user_id]
+        info = self.get_user_info_cached(user_id)
+        if not info:
+            result = f"@{user_id}"
+            self.user_cache[user_id] = result
+            return result
+        name = info.get("name") or info.get("en_name") or user_id
+        result = f"@{name}"
+        self.user_cache[user_id] = result
+        return result
+
+    def resolve_mention_user_name(self, user_id):
+        info = self.get_user_info_cached(user_id)
+        if not info:
+            return f"@{user_id}"
+        name = info.get("name") or info.get("en_name") or user_id
+        return f"@{name}"
+
+    def get_user_info_cached(self, user_id):
+        if user_id in self.user_info_cache:
+            return self.user_info_cache[user_id]
         user_id_type = "user_id"
         if user_id.startswith("ou_"):
             user_id_type = "open_id"
@@ -66,34 +88,9 @@ class LarkDocRenderer:
         try:
             info = get_user_info(user_id, user_id_type=user_id_type)
         except Exception:
-            result = f"@{user_id}"
-            self.user_cache[user_id] = result
-            return result
-        name = info.get("name") or info.get("en_name") or user_id
-        avatar = ""
-        avatar_info = info.get("avatar") or {}
-        if isinstance(avatar_info, dict):
-            avatar = avatar_info.get("avatar_72") or avatar_info.get("avatar_origin") or ""
-            avatar = self.adjust_avatar_size(avatar)
-        if avatar:
-            result = f"![{name}]({avatar}) {name}"
-        else:
-            result = f"@{name}"
-        self.user_cache[user_id] = result
-        return result
-
-    def adjust_avatar_size(self, url):
-        if not url:
-            return url
-        parsed = urlparse(url)
-        query = parse_qs(parsed.query)
-        if "image_size" in query:
-            query["image_size"] = ["16x16"]
-            new_query = urlencode(query, doseq=True)
-            return urlunparse(
-                (parsed.scheme, parsed.netloc, parsed.path, parsed.params, new_query, parsed.fragment)
-            )
-        return url
+            info = None
+        self.user_info_cache[user_id] = info
+        return info
 
     def render_children(self, child_ids, list_level):
         lines = []
@@ -305,8 +302,7 @@ class LarkDocRenderer:
                             continue
                         if r + dr < rows and c + dc < cols:
                             skip[r + dr][c + dc] = True
-                text = self.get_cell_text(cell_id) if cell_id else ""
-                text = html_escape(text).replace("\n", "<br>")
+                text = self.get_cell_text(cell_id, as_html=True) if cell_id else ""
                 attrs = []
                 if row_span > 1:
                     attrs.append(f"rowspan=\"{row_span}\"")
@@ -318,30 +314,61 @@ class LarkDocRenderer:
         lines.append("</table>")
         return lines
 
-    def get_cell_text(self, cell_id):
+    def get_cell_text(self, cell_id, as_html=False):
         if not cell_id:
             return ""
         cell = self.index.get(cell_id, {})
         parts = []
+        resolver = self.resolve_mention_user_name if as_html else self.resolve_mention_user
         for cid in cell.get("children", []):
             child = self.index.get(cid)
             if not child:
                 continue
             bt = child.get("block_type")
             if bt == 2:
-                parts.append(text_from_elements(child["text"].get("elements", []), self.resolve_mention_user))
+                text = text_from_elements(child["text"].get("elements", []), resolver)
+                parts.append(html_escape(text) if as_html else text)
             elif bt in range(3, 12):
                 level = bt - 2
                 key = f"heading{level}"
-                parts.append(text_from_elements(child.get(key, {}).get("elements", []), self.resolve_mention_user))
+                text = text_from_elements(child.get(key, {}).get("elements", []), resolver)
+                parts.append(html_escape(text) if as_html else text)
             elif bt == 12:
-                parts.append(text_from_elements(child["bullet"].get("elements", []), self.resolve_mention_user))
+                text = text_from_elements(child["bullet"].get("elements", []), resolver)
+                parts.append(html_escape(text) if as_html else text)
             elif bt == 13:
-                parts.append(text_from_elements(child["ordered"].get("elements", []), self.resolve_mention_user))
+                text = text_from_elements(child["ordered"].get("elements", []), resolver)
+                parts.append(html_escape(text) if as_html else text)
             elif bt == 14:
-                parts.append(text_from_elements(child["code"].get("elements", []), self.resolve_mention_user))
+                text = text_from_elements(child["code"].get("elements", []), resolver)
+                parts.append(html_escape(text) if as_html else text)
             elif bt == 15:
-                parts.append(text_from_elements(child["quote"].get("elements", []), self.resolve_mention_user))
+                text = text_from_elements(child["quote"].get("elements", []), resolver)
+                parts.append(html_escape(text) if as_html else text)
             elif bt == 17:
-                parts.append(text_from_elements(child["todo"].get("elements", []), self.resolve_mention_user))
-        return "\n".join([p for p in parts if p])
+                text = text_from_elements(child["todo"].get("elements", []), resolver)
+                parts.append(html_escape(text) if as_html else text)
+            elif bt == 27:
+                token = child.get("image", {}).get("token")
+                if token:
+                    rel_path = self.download_media(token)
+                    parts.append(self.render_table_image(rel_path, as_html))
+            elif bt == 43:
+                token = child.get("board", {}).get("token")
+                if token:
+                    rel_path = self.download_board(token)
+                    parts.append(self.render_table_image(rel_path, as_html))
+            elif bt == 21:
+                token = child.get("diagram", {}).get("token")
+                if token:
+                    rel_path = self.download_board(token)
+                    parts.append(self.render_table_image(rel_path, as_html))
+        parts = [p for p in parts if p]
+        if as_html:
+            return "<br>".join(parts)
+        return "\n".join(parts)
+
+    def render_table_image(self, rel_path, as_html):
+        safe_src = html_escape(rel_path) if as_html else rel_path
+        style = f"max-width:{TABLE_IMAGE_MAX_WIDTH}px;height:auto;"
+        return f"<img src=\"{safe_src}\" alt=\"\" style=\"{style}\">"
