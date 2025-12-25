@@ -64,6 +64,23 @@ lark-cli send-message <RECEIVE_ID> \
   - JSON 是否转义与压缩为单行
   - 权限与应用可用范围
 
+## 注意事项
+
+⚠️ **重要**：`lark-cli send-message` 命令的参数格式如下：
+- 接收者ID（邮箱/用户ID等）必须作为**位置参数**直接放在命令后面
+- 使用 `--receive-id-type` 指定接收者ID类型（email/open_id/union_id/user_id/chat_id）
+- 消息内容JSON必须作为**最后一个参数**
+
+✅ 正确示例：
+```bash
+lark-cli send-message --receive-id-type email --msg-type text maifeng@bytedance.com '{"text":"笑话内容"}'
+```
+
+❌ 错误示例（不要这样用）：
+```bash
+lark-cli send-message --email maifeng@bytedance.com --msg-type text --content '{"text":"笑话内容"}'
+```
+
 ## 参考
 
 - 需要消息内容结构体时读取：`references/message_content.md`
