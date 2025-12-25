@@ -36,6 +36,8 @@ _VISIBILITY_RE = re.compile(r"^(\s*)[+\-#~]\s*")
 _L2R_RE = re.compile(r"^\s*left\s+to\s+right\s+direction\b", re.IGNORECASE)
 _ARCHIMATE_RE = re.compile(r"\barchimate\b", re.IGNORECASE)
 _ARCHIMATE_INCLUDE_RE = re.compile(r"^\s*!include\s+<archimate/", re.IGNORECASE)
+_ARCHIMATE_SPRITE_RE = re.compile(r"^\s*sprite\s+\$\w+\s+jar:archimate/", re.IGNORECASE)
+_SPRITE_STEREO_RE = re.compile(r"<<\$\w+>>")
 
 
 def _read_text(path: str) -> str:
@@ -61,7 +63,7 @@ def _is_comment_line(stripped: str) -> bool:
 
 
 def _sanitize_lines(
-    lines: List[str], allow_archimate: bool, archimate_raw: bool
+    lines: List[str], allow_archimate: bool, archimate_raw: bool, archimate_safe: bool
 ) -> Tuple[str, List[str]]:
     """按安全子集规则清理 PlantUML，返回修正文案和变更说明。"""
     output_lines: List[str] = []
@@ -75,7 +77,10 @@ def _sanitize_lines(
 
     has_archimate = any(_ARCHIMATE_RE.search(line) for line in lines)
     allow_archimate = allow_archimate or has_archimate
-    archimate_raw = archimate_raw or has_archimate
+    if archimate_raw:
+        archimate_safe = False
+    else:
+        archimate_safe = archimate_safe or has_archimate
 
     for index, raw_line in enumerate(lines, start=1):
         line = raw_line.rstrip("\n")
@@ -155,6 +160,10 @@ def _sanitize_lines(
                 report.append(f"移除方向指令（第{index}行）：{stripped}")
                 continue
 
+            if archimate_safe and _ARCHIMATE_SPRITE_RE.match(line):
+                report.append(f"移除 ArchiMate sprite（第{index}行）：{stripped}")
+                continue
+
         # 进入类/接口成员块。
         class_match = _CLASS_BLOCK_START_RE.match(line)
         if class_match:
@@ -162,6 +171,12 @@ def _sanitize_lines(
             if "}" not in stripped:
                 in_class_block = True
             continue
+
+        if archimate_safe:
+            cleaned_line, count = _SPRITE_STEREO_RE.subn("", line)
+            if count > 0:
+                report.append(f"移除 ArchiMate sprite 引用（第{index}行）：{stripped}")
+                line = cleaned_line
 
         if not archimate_raw:
             # 清理颜色标记，避免飞书画板忽略或降级。
@@ -211,6 +226,11 @@ def main() -> int:
     parser.add_argument("--report", default="-", help="变更说明输出路径，默认写到 stderr")
     parser.add_argument("--allow-archimate", action="store_true", help="保留 ArchiMate 的 !include 行")
     parser.add_argument(
+        "--archimate-safe",
+        action="store_true",
+        help="ArchiMate 兼容模式：移除 sprite 与其引用，保留结构关系",
+    )
+    parser.add_argument(
         "--archimate-raw",
         action="store_true",
         help="ArchiMate 原生态模式：不移除样式/颜色/方向/预处理，仅去缩进",
@@ -219,7 +239,9 @@ def main() -> int:
 
     text = _read_text(args.input)
     lines = text.splitlines()
-    sanitized, report = _sanitize_lines(lines, args.allow_archimate, args.archimate_raw)
+    sanitized, report = _sanitize_lines(
+        lines, args.allow_archimate, args.archimate_raw, args.archimate_safe
+    )
 
     _write_text(args.output, sanitized)
     _write_report(args.report, report)

@@ -3,7 +3,7 @@
 ## 全局安全语法
 仅使用这些基础语法：
 - @startuml / @enduml
-- title ...（不要缩进）
+- title ...（不要缩进；如报错直接移除）
 - caption ...（可选）
 - 注释：' comment 或 /' ... '/
 
@@ -99,9 +99,9 @@ frame "Foo" {
 @enduml
 
 ## ArchiMate（原生态支持）
-- 依赖 `!include <archimate/Archimate>`，且该行需无缩进。
-- 原生语法允许 `skinparam` / `sprite` / `legend` 等；保持原样即可。
-- 若飞书渲染失败，退回“组件图/部署式分组图”表达。
+- 飞书画板 PlantUML 版本较旧（约 1.2023.13），ArchiMate sprite 不完整。
+- 出现 `No such internal sprite: archimate/xxx` 时，说明引用了旧版不存在的元素；需要移除对应 `sprite` 与其引用。
+- 原生态语法允许 `skinparam` / `sprite` / `legend` 等，但可能失败；失败时优先改用“无 sprite 兼容模板”，其次退回组件图。
 
 ArchiMate 原生态模板（无缩进）：
 
@@ -161,7 +161,17 @@ See
 endlegend
 @enduml
 
-最小模板（无缩进）：
+无 sprite 兼容模板（无缩进）：
+
+@startuml
+rectangle "业务能力" as Biz
+rectangle "应用组件" as App
+rectangle "技术服务" as Tech
+Biz --> App
+App --> Tech
+@enduml
+
+最小模板（无缩进，仅在原生态需要时使用）：
 
 @startuml
 !include <archimate/Archimate>
