@@ -1,9 +1,9 @@
 ---
-name: md-to-lark-doc
+name: lark-md-to-doc
 description: 将 Markdown 文本自动渲染为飞书云文档，按指令块调用 lark-cli 创建/写入内容，并支持高亮块、画板与 PlantUML/Mermaid 图表。适用于任何需要 Markdown → 飞书文档自动落地的场景。
 ---
 
-# Markdown to Lark Doc
+# Lark Markdown to Doc
 
 ## 概览
 

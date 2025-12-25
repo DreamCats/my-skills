@@ -1,9 +1,9 @@
 ---
-name: create-lark-plantuml
+name: lark-creatae-plantuml
 description: 生成和校验飞书画板可用的 PlantUML（安全子集）。当用户需要根据自然语言生成 PlantUML，或提供 PlantUML 并要求在飞书画板可用/降级修复/去除不兼容语法时使用。
 ---
 
-# Create Lark PlantUML
+# Lark Creatae PlantUML
 
 ## 概览
 
