@@ -22,7 +22,7 @@ description: 将 Markdown 文本自动渲染为飞书云文档，按指令块调
 
 ```bash
 # 先进入技能目录（重要），或者使用绝对路径
-cd /xxx/skills/lark-md-to-doc
+cd /Users/bytedance/.codex/skills/lark-md-to-doc
 
 # 创建新文档并渲染
 python3 scripts/render_lark_doc.py --md ./doc.md --title "文档标题" [--folder-token <token>]
