@@ -21,6 +21,7 @@ python3 scripts/chrome_mcp.py screenshot --full-page
 ```
 
 默认行为：
+
 - 优先连接 `http://127.0.0.1:9222`（若可用）。
 - 若未发现可用调试端口，则自动启动一个新的 Chrome。
 - 默认使用 `~/.chrome_mcp/chrome-profile` 作为浏览器数据目录，后续会自动复用该实例（避免重复启动报错）。
@@ -31,6 +32,7 @@ python3 scripts/chrome_mcp.py screenshot --full-page
   - `--timeout` 若小于 1000，将自动按“秒”换算为毫秒并提示。
 
 可选说明：
+
 - 如果你不想复用实例，可加 `--isolated` 启动独立浏览器。
 
 ## 连接已开启的 Chrome（远程调试）
@@ -39,8 +41,8 @@ python3 scripts/chrome_mcp.py screenshot --full-page
 
 ```bash
 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
-  --remote-debugging-port=9222 \
-  --user-data-dir=~/.chrome_mcp/chrome-profile"
+    --remote-debugging-port=9222 \
+    --user-data-dir=$HOME/.chrome_mcp/chrome-profile
 ```
 
 也可以指定不同端口：
@@ -86,6 +88,7 @@ python3 scripts/chrome_mcp.py wait --text "README"
 ```
 
 trace 说明：
+
 - `trace-stop` 若出错，会将结果写入 `*_error.json` 并返回非 0 退出码。
 
 ## 快照解析（提取 uid）
