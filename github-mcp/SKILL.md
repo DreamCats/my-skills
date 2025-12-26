@@ -1,37 +1,36 @@
 ---
 name: github-mcp
-description: Use when Codex needs to operate GitHub via an MCP server over HTTP, including creating/updating files, pushing multiple files, searching repositories/code/issues/users, creating issues/PRs, listing commits/PRs, reviewing/merging PRs, or other GitHub MCP tool calls.
+description: 当需要通过 HTTP 的 MCP 服务操作 GitHub（如创建/更新文件、批量提交、搜索仓库/代码/问题/用户、创建/查询/更新 Issue 与 PR、查看提交、审查与合并 PR 等）时使用。
 ---
 
-# GitHub MCP (HTTP)
+# GitHub MCP（HTTP）
 
-Use the HTTP MCP server to run GitHub operations through tool calls. Prefer the bundled script so the protocol details stay consistent.
+通过 HTTP MCP 服务器调用 GitHub 工具。优先使用脚本，保证协议细节一致。
 
-## Quick start
+## 快速开始
 
-Run commands from the skill directory so relative paths resolve:
+先进入技能目录，避免相对路径问题：
 
 ```bash
-# 先进入技能命令在执行
-cd xxx/skills/github-mcp
+cd /Users/bytedance/.codex/skills/github-mcp
 ```
 
-1. Use the default MCP endpoint (URL already includes the token), or override if needed:
+1. 使用默认 MCP 入口（URL 已内置 token），必要时可覆盖：
 
 ```bash
-# Default URL is baked into the script:
+# 脚本内置默认 URL：
 # https://mcp.api-inference.modelscope.net/3da3158cbc1a4b/mcp
-# Optional override:
+# 可选覆盖：
 export GITHUB_MCP_URL="https://mcp.api-inference.modelscope.net/3da3158cbc1a4b/mcp"
 ```
 
-2. List tools:
+2. 列出工具列表：
 
 ```bash
 python3 scripts/github_mcp.py list-tools
 ```
 
-3. Call a tool:
+3. 调用工具：
 
 ```bash
 python3 scripts/github_mcp.py call \
@@ -39,23 +38,23 @@ python3 scripts/github_mcp.py call \
   --args '{"owner":"octo","repo":"demo","title":"Bug","body":"Steps..."}'
 ```
 
-## Workflow
+## 工作流
 
-- Confirm the MCP base URL and auth header requirements for your server (this default URL already embeds the token).
-- Run `list-tools` to confirm the tool names available.
-- Build the JSON args for the tool; use `get_file_contents` to fetch `sha` before updates.
-- Prefer `push_files` when committing multiple files in one change.
-- Use `rpc` if your MCP server exposes non-standard method names.
-- Review responses for `error` and stop on failures.
+- 确认 MCP 服务入口与鉴权要求（该默认 URL 已内置 token）。
+- 先用 `list-tools` 验证可用的工具名。
+- 按工具定义构造 JSON 参数；更新文件前先用 `get_file_contents` 拿到 `sha`。
+- 多文件一次提交优先用 `push_files`。
+- 若 MCP 服务方法名不标准，可用 `rpc` 直调。
+- 响应里若有 `error`，立即停止并排查。
 
-## Tool reference
+## 工具参考
 
-See `references/github_tools.md` for the available tool list and search query syntax.
+工具清单与搜索语法见 `references/github_tools.md`。
 
-## Notes
+## 备注
 
-- The script speaks JSON-RPC over HTTP. For streamable_http servers, it sends `Accept: application/json, text/event-stream`.
-- For streamable_http servers that require session headers, the script captures `mcp-session-id` from `initialize` and reuses it automatically.
-- The script sends `notifications/initialized` after `initialize` to satisfy servers that require the post-init handshake.
-- If your server uses a different endpoint or headers, pass `--url` and `--header`.
+- 脚本使用 JSON-RPC over HTTP。streamable_http 服务需带 `Accept: application/json, text/event-stream`，脚本已默认发送。
+- 对需要 session 的服务，脚本会在 `initialize` 后自动读取并复用 `mcp-session-id`。
+- 脚本会在 `initialize` 后发送 `notifications/initialized` 以完成握手。
+- 若服务端入口或 header 不同，可用 `--url` 和 `--header` 覆盖。
 - Output is a JSON response; check `result` for tool output and commit details.
