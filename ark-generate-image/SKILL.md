@@ -21,6 +21,7 @@ description: 使用 ark-cli generate 根据文本提示生成图片并获取返�
 ## 出参与解析
 - `--format json`：输出 JSON，包含图片 `url` 字段（用于直连图片）
 - `--format text`：输出文本；若需要 URL，优先改用 `--format json`
+- 禁止拼接 URL：不得使用存储桶 + 对象键方式生成 URL，必须返回原生下载链接（JSON 中的 `url` / `Url` 字段）
 
 ## 标准流程
 1. 让用户提供图片提示词与尺寸需求；未给尺寸则默认 `2048x2048`
