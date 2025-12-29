@@ -3,13 +3,14 @@ import subprocess
 import sys
 
 
-def run_cmd(cmd):
+def run_cmd(cmd, quiet=True):
     try:
         return subprocess.check_output(cmd, text=True)
     except subprocess.CalledProcessError as exc:
-        sys.stderr.write(exc.stdout or "")
-        sys.stderr.write(exc.stderr or "")
-        sys.stderr.write(f"Command failed: {' '.join(cmd)}\n")
+        if not quiet:
+            sys.stderr.write(exc.stdout or "")
+            sys.stderr.write(exc.stderr or "")
+            sys.stderr.write(f"Command failed: {' '.join(cmd)}\n")
         raise
 
 
