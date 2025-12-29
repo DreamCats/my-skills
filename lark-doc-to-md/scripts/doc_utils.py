@@ -17,13 +17,17 @@ def extract_doc_id(doc_id, doc_url):
     segments = [seg for seg in parsed.path.split("/") if seg]
     for idx, seg in enumerate(segments):
         if seg == "wiki" and idx + 1 < len(segments):
-            return resolve_wiki_node(segments[idx + 1])
+            resolved = resolve_wiki_node(segments[idx + 1])
+            if resolved:
+                return resolved
     for idx, seg in enumerate(segments):
         if seg in ("docx", "docs", "doc", "wiki") and idx + 1 < len(segments):
             return segments[idx + 1]
     match = re.search(r"[A-Za-z0-9]{20,}", doc_url)
     if match:
         if "/wiki/" in parsed.path:
-            return resolve_wiki_node(match.group(0))
+            resolved = resolve_wiki_node(match.group(0))
+            if resolved:
+                return resolved
         return match.group(0)
     raise ValueError(f"Unable to extract doc_id from url: {doc_url}")
