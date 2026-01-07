@@ -1,7 +1,6 @@
 ---
 name: byted-codebase
-description: 字节码本MCP工具（已默认配置PSM: bytedance.mcp.codebase, Region: CN, Token: code_pat_UPByoMOUvKmqTforneex），提供简洁的命令行和Python接口，包含codebase特有工具使用示例和CN区域优化建议
-type: domain
+description: This skill should be used when the user asks to "byted-codebase", "字节仓库", "codebase MCP", "查询代码库", or needs ByteDance codebase tooling.
 ---
 
 # 字节码本 MCP 工具（CN 区域 - 默认配置版）
